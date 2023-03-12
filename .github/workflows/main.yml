@@ -12,6 +12,11 @@ jobs:
       - run: sudo apt update
       - run: sudo apt install python2
       - run: sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+      - run: curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+      - run: sudo python2 get-pip.py
+      - run: sudo -H python2.7 -m pip install -U pip setuptools wheel virtualenv
+      - run: sudo apt install python2-dev
+      - run: sudo apt install libnode-dev npm
 
       - run: ls -al
 
