@@ -5,7 +5,7 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: rebble/pebble-sdk:4.5-2
+    #container: rebble/pebble-sdk:4.5-2
     steps:
       - uses: actions/checkout@v3
 
