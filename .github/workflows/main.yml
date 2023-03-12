@@ -30,6 +30,12 @@ jobs:
           echo "$HOME/pebble-dev/pebble-sdk-4.5-linux64/bin" >> $GITHUB_PATH
           if [ "$(grep 'pebble-sdk-homebrew' requirements.txt)" ]; then cp requirements.txt requirements.txt.OLD; grep -v pypkjs requirements.txt.OLD > requirements.txt; echo 'git+https://github.com/pebble/pypkjs.git' >> requirements.txt; fi
           if [ "$(grep 'sdk.getpebble.com' pebble-tool/pebble_tool/sdk/manager.py)" ]; then sudo mv pebble-tool pebble-tool.OLD; sudo git clone https://github.com/pebble-dev/pebble-tool.git; fi
+          [ -e .env ] || virtualenv --python=python2.7 .env
+          . .env/bin/activate
+          pip install -r requirements.txt
+          pip install -r pebble-tool/requirements.txt
+          deactivate
+          pebble sdk install latest
 
       - run: ls -al
 
