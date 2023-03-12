@@ -1,0 +1,10 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: rebble/pebble-sdk:4.5-2
+    steps:
+      run: pebble --help
