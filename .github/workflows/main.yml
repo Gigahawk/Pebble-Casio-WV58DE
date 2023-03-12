@@ -20,6 +20,17 @@ jobs:
           sudo apt install python2-dev
           sudo apt install libnode-dev npm
 
+      - name: Install Pebble SDK
+        run: |
+          mkdir ~/pebble-dev
+          pushd ~/pebble-dev
+          wget https://developer.rebble.io/s3.amazonaws.com/assets.getpebble.com/pebble-tool/pebble-sdk-4.5-linux64.tar.bz2
+          tar -xf pebble-sdk-4.5-linux64.tar.bz2
+          cd pebble-sdk-4.5-linux64
+          echo "$HOME/pebble-dev/pebble-sdk-4.5-linux64/bin" >> $GITHUB_PATH
+          if [ "$(grep 'pebble-sdk-homebrew' requirements.txt)" ]; then cp requirements.txt requirements.txt.OLD; grep -v pypkjs requirements.txt.OLD > requirements.txt; echo 'git+https://github.com/pebble/pypkjs.git' >> requirements.txt; fi
+          if [ "$(grep 'sdk.getpebble.com' pebble-tool/pebble_tool/sdk/manager.py)" ]; then sudo mv pebble-tool pebble-tool.OLD; sudo git clone https://github.com/pebble-dev/pebble-tool.git; fi
+
       - run: ls -al
 
       - run: pebble --help
