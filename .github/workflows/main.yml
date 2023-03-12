@@ -9,6 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - run: apt update
+      - run: apt install python2
+
       - run: ls -al
 
       - run: pebble --help
