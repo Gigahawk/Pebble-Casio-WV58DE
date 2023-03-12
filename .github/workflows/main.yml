@@ -7,4 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     container: rebble/pebble-sdk:4.5-2
     steps:
+      - run: ls
       - run: pebble --help
