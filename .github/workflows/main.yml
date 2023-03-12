@@ -38,7 +38,7 @@ jobs:
           deactivate
 
       - name: Install Pebble SDK
-        run: yes | pebble sdk install latest
+        run: yes | pebble sdk install 3.9.2
 
       - run: tree
 
