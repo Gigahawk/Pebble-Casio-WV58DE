@@ -20,7 +20,7 @@ jobs:
           sudo apt install python2-dev
           sudo apt install libnode-dev npm
 
-      - name: Install Pebble SDK
+      - name: Bootstrap Pebble SDK
         run: |
           mkdir ~/pebble-dev
           pushd ~/pebble-dev
@@ -35,7 +35,9 @@ jobs:
           pip install -r requirements.txt
           pip install -r pebble-tool/requirements.txt
           deactivate
-          pebble sdk install latest
+
+      - name: Install Pebble SDK
+        run: pebble sdk install latest
 
       - run: ls -al
 
