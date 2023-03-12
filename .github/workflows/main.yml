@@ -40,12 +40,14 @@ jobs:
       - name: Install Pebble SDK
         run: yes | pebble sdk install latest
 
-      - run: ls -al
+      - run: tree
 
       - name: Install project dependencies
         run: npm install
 
+      - run: tree
+
       - name: Build app
         run: pebble build
 
-      - run: ls -al
+      - run: tree
