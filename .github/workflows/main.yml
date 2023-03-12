@@ -37,7 +37,7 @@ jobs:
           deactivate
 
       - name: Install Pebble SDK
-        run: pebble sdk install latest
+        run: yes | pebble sdk install latest
 
       - run: ls -al
 
