@@ -19,11 +19,12 @@ jobs:
           sudo -H python2.7 -m pip install -U pip setuptools wheel virtualenv
           sudo apt install python2-dev
           sudo apt install libnode-dev npm
+          rm get-pip.py
 
       - name: Bootstrap Pebble SDK
         run: |
           mkdir ~/pebble-dev
-          pushd ~/pebble-dev
+          cd ~/pebble-dev
           wget https://developer.rebble.io/s3.amazonaws.com/assets.getpebble.com/pebble-tool/pebble-sdk-4.5-linux64.tar.bz2
           tar -xf pebble-sdk-4.5-linux64.tar.bz2
           cd pebble-sdk-4.5-linux64
@@ -41,4 +42,7 @@ jobs:
 
       - run: ls -al
 
-      - run: pebble --help
+      - name: Build app
+        run: pebble build
+
+      - run: ls -al
