@@ -10,6 +10,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache date
+        run: echo "DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Filename friendly date
+        run: echo "BUILD_DATE=$(echo $DATE | sed -r -e 's/:/./g' -e 's/ /_/g')" >> $GITHUB_ENV
+
+      - name: Store branch name
+        run: echo "BUILD_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Store commit hash
+        run: echo "BUILD_COMMIT=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+
+      - name: Generate output name
+        run: echo "NAME=${BUILD_DATE}_${BUILD_BRANCH}_${BUILD_COMMIT}_Pebble-Casio-WV58DE" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: |
           sudo apt update
@@ -47,5 +62,5 @@ jobs:
       - name: Upload app
         uses: actions/upload-artifact@v3
         with:
-          name: pebble-app
+          name: ${{ env.NAME }}
           path: build/*.pbw
