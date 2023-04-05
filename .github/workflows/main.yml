@@ -5,7 +5,8 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    #container: rebble/pebble-sdk:4.5-2
+    env:
+      SDK_VER: 4.3
     steps:
       - uses: actions/checkout@v3
 
@@ -38,16 +39,13 @@ jobs:
           deactivate
 
       - name: Install Pebble SDK
-        run: yes | pebble sdk install 4.3
-
-      - run: tree
-
-      - name: Install project dependencies
-        run: npm install
-
-      - run: tree
+        run: yes | pebble sdk install $SDK_VER
 
       - name: Build app
-        run: pebble build
+        run: pebble build --sdk $SDK_VER
 
-      - run: tree
+      - name: Upload app
+        uses: actions/upload-artifact@v3
+        with:
+          name: pebble-app
+          path: build/*.pbw
