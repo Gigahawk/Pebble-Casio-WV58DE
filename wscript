@@ -45,5 +45,12 @@ def build(ctx):
         else:
             binaries.append({'platform': p, 'app_elf': app_elf})
 
-    ctx.pbl_bundle(binaries=binaries, js=ctx.path.ant_glob('src/js/**/*.js'))
+    ctx.pbl_bundle(
+        binaries=binaries,
+        js=ctx.path.ant_glob([
+            'src/pkjs/**/*.js',
+            'src/pkjs/**/*.json',
+            ]),
+        js_entry_file='src/pkjs/pebble-js-app.js'
+        )
 
