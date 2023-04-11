@@ -1,3 +1,6 @@
+const Clay = require('pebble-clay');
+const clayConfig = require('./config');
+const clay = new Clay(clayConfig); // eslint-disable-line no-unused-vars
 let CityID = 0;
 let posLat = '0';
 let posLon = '0';
@@ -158,38 +161,3 @@ function updateWeather() {
   };
   req.send(null);
 }
-
-Pebble.addEventListener('showConfiguration', function() {
-  const options = JSON.parse(localStorage.getItem('cas_wv_28de_opt'));
-  console.log('read options: ' + JSON.stringify(options));
-  console.log('showing configuration');
-  let uri = 'http://panicman.github.io/config_casiowv58de.html?title=Casio%20WV-58DE%20v2.10';
-  if (options !== null) {
-    uri +=
-      '&inv=' + encodeURIComponent(options.inv) +
-      '&showsec=' + encodeURIComponent(options.showsec) +
-      '&battdgt=' + encodeURIComponent(options.battdgt) +
-      '&showbatt=' + encodeURIComponent(options.showbatt) +
-      '&vibr=' + encodeURIComponent(options.vibr) +
-      '&vibr_bt=' + encodeURIComponent(options.vibr_bt) +
-      '&datefmt=' + encodeURIComponent(options.datefmt) +
-      '&weather=' + encodeURIComponent(options.weather) +
-      '&showcond=' + encodeURIComponent(options.showcond) +
-      '&units=' + encodeURIComponent(options.units) +
-      '&cityid=' + encodeURIComponent(options.cityid);
-  }
-  console.log('Uri: '+uri);
-  Pebble.openURL(uri);
-});
-
-Pebble.addEventListener('webviewclosed', function(e) {
-  console.log('configuration closed');
-  if (e.response !== '') {
-    const options = JSON.parse(decodeURIComponent(e.response));
-    console.log('storing options: ' + JSON.stringify(options));
-    localStorage.setItem('cas_wv_28de_opt', JSON.stringify(options));
-    sendMessageToPebble(options);
-  } else {
-    console.log('no options received');
-  }
-});
