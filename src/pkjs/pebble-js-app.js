@@ -1,9 +1,8 @@
+const messageKeys = require('message_keys');
 const Clay = require('pebble-clay');
+const customClay = require('./custom-clay');
 const clayConfig = require('./config');
-const clay = new Clay(clayConfig); // eslint-disable-line no-unused-vars
-let CityID = 0;
-let posLat = '0';
-let posLon = '0';
+const clay = new Clay(clayConfig, customClay, {autoHandleEvents: false});
 let lang = 'en';
 const weatherIcon = {
   '01d': 'I', // clear sky (day)
@@ -30,6 +29,38 @@ const locationOptions = {
   maximumAge: 10000,
   timeout: 10000,
 };
+
+Pebble.addEventListener('showConfiguration', function(e) {
+  Pebble.openURL(clay.generateUrl());
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+  if (e && !e.response) {
+    return;
+  }
+
+  const dict = clay.getSettings(e.response);
+  console.log('Sending settings to watch');
+  console.log(JSON.stringify(dict));
+  if (!dict[messageKeys.apiKeyOk]) {
+    console.log('Invalid API key, disabling weather');
+    dict.weather = false;
+  }
+
+  // Remove phone only settings
+  delete dict[messageKeys.apiKey];
+  delete dict[messageKeys.apiKeyOk];
+  delete dict[messageKeys.cityid];
+
+  // Send settings values to watch side
+  Pebble.sendAppMessage(dict, function(e) {
+    console.log('Sent config data to Pebble');
+    console.log(JSON.stringify(dict));
+  }, function(e) {
+    console.log('Failed to send config data!');
+    console.log(JSON.stringify(e));
+  });
+});
 
 Pebble.addEventListener('ready', function() {
   let pebbleLang = 'en_US';
@@ -90,10 +121,11 @@ function locationSuccess(pos) {
   // Get current location:
   // http://forums.getpebble.com/discussion/21755/pebble-js-location-to-url
   console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
-  posLat = (pos.coords.latitude).toFixed(3);
-  posLon = (pos.coords.longitude).toFixed(3);
-
-  updateWeather();
+  args = {
+    'lat': (pos.coords.latitude).toFixed(3),
+    'lon': (pos.coords.longitude).toFixed(3),
+  };
+  fetchWeather(args);
 }
 
 /**
@@ -101,43 +133,60 @@ function locationSuccess(pos) {
  * @param {GeolocationPositionError} err error
  */
 function locationError(err) {
-  posLat = '0';
-  posLon = '0';
   console.log('location error (' + err.code + '): ' + err.message);
 }
 
 Pebble.addEventListener('appmessage', function(e) {
   console.log('Got message: ' + JSON.stringify(e));
-  if ('cityid' in e.payload) { // Weather Download
-    CityID = e.payload.cityid;
-    if (CityID === 0) {
-      navigator.geolocation.getCurrentPosition(
-          locationSuccess, locationError, locationOptions);
-    } else {
-      updateWeather();
+  if ('commandType' in e.payload) {
+    switch (e.payload.commandType) {
+      case 'weather':
+        updateWeather();
+        break;
     }
   }
 });
 
 /**
- * Request weather from OpenWeatherMap and push it to the watch
+ * Trigger a weather update
  */
 function updateWeather() {
   console.log('Updating weather');
-  const req = new XMLHttpRequest();
-  let URL = 'http://api.openweathermap.org/data/2.5/weather?APPID=9a4eed6c813f6d55d0699c148f7b575a&';
-
-  if (CityID !== 0) {
-    URL += 'id='+CityID.toString();
-  } else if (posLat != '0' && posLon != '0') {
-    URL += 'lat=' + posLat + '&lon=' + posLon;
+  cityId = JSON.parse(localStorage.getItem('clay-settings')).cityid;
+  console.log('City ID is ' + cityId);
+  if (cityId !== '0') {
+    fetchWeather({'cityId': cityId});
   } else {
-    return;
-  } // Error, no position data
+    navigator.geolocation.getCurrentPosition(
+        locationSuccess, locationError, locationOptions);
+  }
+}
 
-  URL += '&units=metric&lang=' + lang + '&type=accurate';
-  console.log('UpdateURL: ' + URL);
-  req.open('GET', URL, true);
+/**
+ * Fetch weather from OpenWeatherMap and push it to the watch
+ * @param {Object} args arguments dict, either containing a cityId,
+ *                      or lat lon pair
+ */
+function fetchWeather(args) {
+  apiKey = JSON.parse(localStorage.getItem('clay-settings')).apiKey;
+  const req = new XMLHttpRequest();
+  let url = 'http://api.openweathermap.org/data/2.5/weather?';
+  if ('cityId' in args) {
+    console.log('Fetching weather for city ID ' + args.cityId);
+    url += 'id='+ args.cityId;
+  } else if (('lat' in args) && ('lon' in args)) {
+    console.log(
+        'Fetching weather for lat: ' + args.lat + ' lon: ' + args.lon);
+    url += 'lat=' + args.lat + '&lon=' + args.lon;
+  } else {
+    console.log('Invalid fetchWeather args');
+    console.log(JSON.stringify(args, null, 4));
+    return;
+  }
+  url += '&units=metric&lang=' + lang + '&type=accurate';
+  url += '&appid=' + apiKey;
+  console.log('UpdateURL: ' + url);
+  req.open('GET', url, true);
   req.onload = function(e) {
     if (req.readyState == 4) {
       if (req.status == 200) {

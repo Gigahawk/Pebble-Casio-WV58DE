@@ -14,6 +14,7 @@ enum ConfigKeys {
   C_BATT_DGT = 9,
   C_BATT_SHOW = 10,
   C_COND_SHOW = 11,
+  C_CMD_TYPE = 13,
   W_TIME = 90,
   W_TEMP = 91,
   W_ICON = 92,
@@ -321,13 +322,12 @@ static bool update_weather() {
     return false;
   };
 
-  Tuplet val_ckey = TupletInteger(C_CKEY, CfgData.cityid);
+  Tuplet val_ckey = TupletCString(C_CMD_TYPE, "weather");
   dict_write_tuplet(iter, &val_ckey);
   dict_write_end(iter);
 
   app_message_outbox_send();
-  app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__,
-          "Send message with data: c_ckey=%d", (int)CfgData.cityid);
+  app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, "Send weather request");
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------------------

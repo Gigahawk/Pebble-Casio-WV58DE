@@ -192,10 +192,16 @@ module.exports = [
         'defaultValue': 'Weather',
       },
       {
+        'type': 'input',
+        'messageKey': 'apiKey',
+        'label': 'OpenWeatherMap API Key',
+      },
+      {
         'type': 'select',
         'messageKey': 'units',
         'defaultValue': 'c',
         'label': 'Units',
+        'group': 'weather',
         'options': [
           {
             'label': '°C',
@@ -210,7 +216,8 @@ module.exports = [
       {
         'type': 'select',
         'messageKey': 'weather',
-        'defaultValue': 'yes',
+        'defaultValue': 'no',
+        'group': 'weather',
         'label': 'Show Weather',
         'options': [
           {
@@ -226,7 +233,8 @@ module.exports = [
       {
         'type': 'select',
         'messageKey': 'showcond',
-        'defaultValue': 'yes',
+        'defaultValue': 'no',
+        'group': 'weather',
         'label': 'Show Condition',
         'options': [
           {
@@ -245,6 +253,13 @@ module.exports = [
         'label': 'OpenWeatherMap City ID',
         'description': 'Use 0 for auto location',
         'defaultValue': '0',
+        'group': 'weather',
+      },
+      {
+        // hidden
+        'type': 'toggle',
+        'messageKey': 'apiKeyOk',
+        'defaultValue': false,
       },
     ],
   },
