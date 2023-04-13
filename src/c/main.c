@@ -461,30 +461,27 @@ void in_received_handler(DictionaryIterator *received, void *ctx) {
       CfgData.w_UpdateRetry = true;
       break;
     case C_INV:
-      persist_write_bool(C_INV, strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_INV, akt_tuple->value->int32 == 1);
       break;
     case C_SHOWSEC:
-      persist_write_int(C_SHOWSEC,
-                        strcmp(akt_tuple->value->cstring, "nev") == 0   ? 0
-                        : strcmp(akt_tuple->value->cstring, "05s") == 0 ? 5
-                        : strcmp(akt_tuple->value->cstring, "10s") == 0 ? 10
-                        : strcmp(akt_tuple->value->cstring, "15s") == 0 ? 15
-                        : strcmp(akt_tuple->value->cstring, "30s") == 0 ? 30
-                                                                        : 1);
+      persist_write_int(C_SHOWSEC, akt_tuple->value->int32 == 0   ? 1
+                                   : akt_tuple->value->int32 == 1 ? 5
+                                   : akt_tuple->value->int32 == 2 ? 10
+                                   : akt_tuple->value->int32 == 3 ? 15
+                                   : akt_tuple->value->int32 == 4 ? 30
+                                                                  : 0);
       break;
     case C_BATT_DGT:
-      persist_write_bool(C_BATT_DGT,
-                         strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_BATT_DGT, akt_tuple->value->int32 == 1);
       break;
     case C_BATT_SHOW:
-      persist_write_int(C_BATT_SHOW, intVal);
+      persist_write_int(C_BATT_SHOW, akt_tuple->value->int32 * 10);
       break;
     case C_VIBR:
-      persist_write_bool(C_VIBR, strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_VIBR, akt_tuple->value->int32 == 1);
       break;
     case C_VIBR_BT:
-      persist_write_bool(C_VIBR_BT,
-                         strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_VIBR_BT, akt_tuple->value->int32 == 1);
       break;
     case C_DATEFMT:
       persist_write_int(C_DATEFMT,
@@ -494,15 +491,13 @@ void in_received_handler(DictionaryIterator *received, void *ctx) {
                                                                         : 0);
       break;
     case C_WEATHER:
-      persist_write_bool(C_WEATHER,
-                         strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_WEATHER, akt_tuple->value->int32 == 1);
       break;
     case C_UNITS:
       persist_write_bool(C_UNITS, strcmp(akt_tuple->value->cstring, "f") == 0);
       break;
     case C_COND_SHOW:
-      persist_write_bool(C_COND_SHOW,
-                         strcmp(akt_tuple->value->cstring, "yes") == 0);
+      persist_write_bool(C_COND_SHOW, akt_tuple->value->int32 == 1);
       break;
     case C_CKEY:
       persist_write_int(C_CKEY, intVal);

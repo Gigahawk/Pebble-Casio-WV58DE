@@ -11,151 +11,63 @@ module.exports = [
         'defaultValue': 'Visual',
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'inv',
-        'defaultValue': 'no',
-        'label': 'Inverter',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
+        'defaultValue': false,
+        'label': 'Dark Mode',
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'vibr',
-        'defaultValue': 'no',
-        'label': 'Hourly vibrate',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
+        'defaultValue': false,
+        'label': 'Hourly Vibration',
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'battdgt',
-        'defaultValue': 'yes',
+        'defaultValue': true,
         'label': 'Battery Digits',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
       },
       {
-        'type': 'select',
+
+        'type': 'itemizedSlider',
         'messageKey': 'showsec',
-        'defaultValue': 'all',
-        'label': 'Show seconds interval',
+        'id': 'showSecSlider',
+        'label': 'Seconds Refresh Interval',
+        'defaultValue': 0,
         'options': [
-          {
-            'label': 'always',
-            'value': 'all',
-          },
-          {
-            'label': 'never',
-            'value': 'nev',
-          },
-          {
-            'label': 'every 5s',
-            'value': '05s',
-          },
-          {
-            'label': 'every 10s',
-            'value': '10s',
-          },
-          {
-            'label': 'every 15s',
-            'value': '15s',
-          },
-          {
-            'label': 'every 30s',
-            'value': '30s',
-          },
+          '1s',
+          '5s',
+          '10s',
+          '15s',
+          '30s',
+          'off',
         ],
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'vibr_bt',
-        'defaultValue': 'yes',
-        'label': 'BT loss vibrate',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
+        'defaultValue': true,
+        'label': 'Vibrate on Disconnect',
       },
       {
-        'type': 'select',
+        'type': 'itemizedSlider',
         'messageKey': 'showbatt',
-        'defaultValue': '100',
+        'id': 'showBatSlider',
+        'defaultValue': 10,
         'label': 'Show battery below',
         'options': [
-          {
-            'label': 'always',
-            'value': '100',
-          },
-          {
-            'label': '90%',
-            'value': '90',
-          },
-          {
-            'label': '80%',
-            'value': '80',
-          },
-          {
-            'label': '70%',
-            'value': '70',
-          },
-          {
-            'label': '60%',
-            'value': '60',
-          },
-          {
-            'label': '50%',
-            'value': '50',
-          },
-          {
-            'label': '40%',
-            'value': '40',
-          },
-          {
-            'label': '30%',
-            'value': '30',
-          },
-          {
-            'label': '20%',
-            'value': '20',
-          },
-          {
-            'label': '10%',
-            'value': '10',
-          },
-          {
-            'label': 'never',
-            'value': '0',
-          },
+          'never',
+          '10%',
+          '20%',
+          '30%',
+          '40%',
+          '50%',
+          '60%',
+          '70%',
+          '80%',
+          '90%',
+          'always',
         ],
       },
       {
@@ -214,38 +126,18 @@ module.exports = [
         ],
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'weather',
-        'defaultValue': 'no',
+        'defaultValue': false,
         'group': 'weather',
         'label': 'Show Weather',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
       },
       {
-        'type': 'select',
+        'type': 'toggle',
         'messageKey': 'showcond',
-        'defaultValue': 'no',
+        'defaultValue': false,
         'group': 'weather',
         'label': 'Show Condition',
-        'options': [
-          {
-            'label': 'Yes',
-            'value': 'yes',
-          },
-          {
-            'label': 'No',
-            'value': 'no',
-          },
-        ],
       },
       {
         'type': 'input',
