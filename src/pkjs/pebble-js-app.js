@@ -1,8 +1,12 @@
+
 const messageKeys = require('message_keys');
+const itemizedSlider = require('./itemized-slider');
 const Clay = require('pebble-clay');
 const customClay = require('./custom-clay');
 const clayConfig = require('./config');
 const clay = new Clay(clayConfig, customClay, {autoHandleEvents: false});
+clay.registerComponent(itemizedSlider);
+
 let lang = 'en';
 const weatherIcon = {
   '01d': 'I', // clear sky (day)
@@ -50,7 +54,12 @@ Pebble.addEventListener('webviewclosed', function(e) {
   // Remove phone only settings
   delete dict[messageKeys.apiKey];
   delete dict[messageKeys.apiKeyOk];
-  delete dict[messageKeys.cityid];
+
+  // TODO: Watchapp uses city id as a weather reload trigger, remove?
+  // if (dict[messageKeys.apiKeyOk]) {
+  //  updateWeather()
+  // }
+  // delete dict[messageKeys.cityid];
 
   // Send settings values to watch side
   Pebble.sendAppMessage(dict, function(e) {

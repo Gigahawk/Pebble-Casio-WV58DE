@@ -25,6 +25,23 @@ module.exports = function(minified) {
   }
 
   /**
+   * Check if the 'Show Weather' switch is enabled, and only enable the
+   * 'Show Condition' switch if it is.
+   *
+   * (Condition is only shown on the watchface if weather is enabled)
+   */
+  function enableConditionConfig() {
+    const showWeather = clayConfig.getItemByMessageKey('weather');
+    const showCondition = clayConfig.getItemByMessageKey('showcond');
+    const enable = showWeather.get();
+    if (enable) {
+      showCondition.enable();
+    } else {
+      showCondition.disable();
+    }
+  }
+
+  /**
    * Lock/unlock weather config options
    * @param {bool} enable true to unlock, false to lock
    */
@@ -34,6 +51,7 @@ module.exports = function(minified) {
       components.forEach(function(c) {
         c.enable();
       });
+      enableConditionConfig();
     } else {
       components.forEach(function(c) {
         c.disable();
@@ -44,6 +62,7 @@ module.exports = function(minified) {
   clayConfig.on(clayConfig.EVENTS.AFTER_BUILD, function() {
     const apiKey = clayConfig.getItemByMessageKey('apiKey');
     const apiKeyOk = clayConfig.getItemByMessageKey('apiKeyOk');
+    const showWeather = clayConfig.getItemByMessageKey('weather');
     apiKeyOk.hide();
 
     /**
@@ -76,5 +95,6 @@ module.exports = function(minified) {
     isApiKeyValid();
 
     apiKey.on('change', isApiKeyValid);
+    showWeather.on('change', enableConditionConfig);
   });
 };
