@@ -64,3 +64,27 @@ jobs:
         with:
           name: ${{ env.NAME }}
           path: build/*.pbw
+
+  release:
+    permissions:
+      contents: write
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download files
+        uses: actions/download-artifact@v3
+
+      - name: Zip each folder
+        run: |
+          for d in */; do
+            echo "Zipping ${d} into ${d%/}.zip"
+            zip -r "${d%/}.zip" "$d"
+            echo "Deleting ${d}"
+            rm -rf "$d"
+          done
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            *
