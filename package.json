@@ -1,5 +1,5 @@
 {
-    "author": "PanicMan/Jack T.",
+    "author": "Gigahawk",
     "dependencies": {
         "pebble-effect-layer": "^1.1.3",
         "pebble-clay": "^1.0.4"
@@ -11,7 +11,7 @@
             "location",
             "configurable"
         ],
-        "displayName": "Casio WV-58DE",
+        "displayName": "Casio WV-58DE (Gigahawk's Fork)",
         "enableMultiJS": true,
         "messageKeys": {
             "JS_READY": 0,
@@ -109,7 +109,7 @@
             "watchface": true
         }
     },
-    "version": "2.10.0",
+    "version": "2.11.0",
     "devDependencies": {
         "eslint": "^8.38.0",
         "eslint-config-google": "^0.14.0"
