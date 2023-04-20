@@ -7,8 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SDK_VER: 4.3
+      SDK_BUNDLE_NAME: pebble-sdk-4.5-linux64
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
 
       - name: Cache date
         run: echo "DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
@@ -35,16 +38,18 @@ jobs:
           sudo -H python2.7 -m pip install -U pip setuptools wheel virtualenv
           sudo apt install python2-dev
           sudo apt install libnode-dev npm
+          sudo apt install -y libsdl1.2debian libfdt1 libpixman-1-0
+          sudo apt install -y xvfb
           rm get-pip.py
 
       - name: Bootstrap Pebble SDK
         run: |
           mkdir ~/pebble-dev
           cd ~/pebble-dev
-          wget https://developer.rebble.io/s3.amazonaws.com/assets.getpebble.com/pebble-tool/pebble-sdk-4.5-linux64.tar.bz2
-          tar -xf pebble-sdk-4.5-linux64.tar.bz2
-          cd pebble-sdk-4.5-linux64
-          echo "$HOME/pebble-dev/pebble-sdk-4.5-linux64/bin" >> $GITHUB_PATH
+          wget https://developer.rebble.io/s3.amazonaws.com/assets.getpebble.com/pebble-tool/${SDK_BUNDLE_NAME}.tar.bz2
+          tar -xf ${SDK_BUNDLE_NAME}.tar.bz2
+          cd ${SDK_BUNDLE_NAME}
+          echo "$HOME/pebble-dev/${SDK_BUNDLE_NAME}/bin" >> $GITHUB_PATH
           if [ "$(grep 'pebble-sdk-homebrew' requirements.txt)" ]; then cp requirements.txt requirements.txt.OLD; grep -v pypkjs requirements.txt.OLD > requirements.txt; echo 'git+https://github.com/pebble/pypkjs.git' >> requirements.txt; fi
           if [ "$(grep 'sdk.getpebble.com' pebble-tool/pebble_tool/sdk/manager.py)" ]; then sudo mv pebble-tool pebble-tool.OLD; sudo git clone https://github.com/pebble-dev/pebble-tool.git; fi
           [ -e .env ] || virtualenv --python=python2.7 .env
@@ -59,11 +64,17 @@ jobs:
       - name: Build app
         run: pebble build --sdk $SDK_VER
 
+      - name: Generate screenshots (release only)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: ./scripts/gen_screenshots.sh
+
       - name: Upload app
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.NAME }}
-          path: build/*.pbw
+          path: |
+            build/*.pbw
+            build/*.png
 
   release:
     permissions:
