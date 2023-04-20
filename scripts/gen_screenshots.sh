@@ -36,8 +36,14 @@ do
     echo "Installing app on $platform"
     pebble install --qemu localhost:$QEMU_PORT
     echo "Sending default settings to app on $platform"
+    # Sending isn't very consistent, just do it a few times for now
+    "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py setup_sample.json $QEMU_PORT
+    "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py setup_sample.json $QEMU_PORT
     "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py setup_sample.json $QEMU_PORT
     echo "Sending weather data to app on $platform"
+    # Sending isn't very consistent, just do it a few times for now
+    "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py weather_sample.json $QEMU_PORT
+    "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py weather_sample.json $QEMU_PORT
     "$PEBBLE_PATH/.env/bin/python" scripts/send_message.py weather_sample.json $QEMU_PORT
     echo "Saving screenshot to $screenshotPath"
     pebble screenshot --qemu localhost:$QEMU_PORT $screenshotPath
