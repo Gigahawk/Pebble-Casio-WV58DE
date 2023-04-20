@@ -1,7 +1,7 @@
 module.exports = [
   {
     'type': 'heading',
-    'defaultValue': 'Casio WV-58DE v2.12 Configuration',
+    'defaultValue': 'Casio WV-58DE v2.13 Configuration',
   },
   {
     'type': 'section',
